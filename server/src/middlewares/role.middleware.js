@@ -1,23 +1,22 @@
 import { ApiError } from "../utils/ApiError.js";
 
-// ==========================================
-// ROLE CHECK — Restricts routes to specific roles
-// Usage: authorize("admin")
-//        authorize("admin", "moderator")
-// ==========================================
 export const authorize = (...allowedRoles) => {
   return (req, res, next) => {
+    // 1. Ensure user is authenticated
+    //    (must have verifyJWT BEFORE this middleware)
     if (!req.user) {
       throw new ApiError(401, "Unauthorized: Please login first");
     }
 
+    // 2. Check role
     if (!allowedRoles.includes(req.user.role)) {
       throw new ApiError(
         403,
-        `Access denied: ${req.user.role} cannot access this resource`
+        `Access denied: '${req.user.role}' role cannot access this resource`
       );
     }
 
+    // 3. Role matches → continue
     next();
   };
 };

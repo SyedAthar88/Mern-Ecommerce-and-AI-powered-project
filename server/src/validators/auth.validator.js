@@ -23,3 +23,23 @@ export const loginSchema = z.object({
   email: z.string().trim().toLowerCase().email("Invalid email"),
   password: z.string().min(1, "Password is required"),
 });
+// ==========================================
+// FORGOT PASSWORD — email only
+// ==========================================
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string({ required_error: "Email is required" })
+    .trim()
+    .toLowerCase()
+    .email("Please provide a valid email"),
+});
+
+// ==========================================
+// RESET PASSWORD — new password only
+// ==========================================
+export const resetPasswordSchema = z.object({
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(6, "Password must be at least 6 characters")
+    .max(100, "Password is too long"),
+});

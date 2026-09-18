@@ -4,9 +4,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { env } from "./config/env.js";
-
 // NEW IMPORTS ⬇️
 import authRoutes from "./routes/auth.routes.js";
+import adminRoutes from "./routes/admin.routes.js"
 import userRoutes  from './routes/user.routes.js'
 import { errorHandler } from "./middlewares/error.middleware.js";
 const app=express();
@@ -43,7 +43,8 @@ app.get("/api/health", (req, res) => {
 });
 // NEW ⬇️ — auth routes
 app.use("/api/auth", authRoutes);
-app.use("/api/users" ,userRoutes)
+app.use("/api/users" ,userRoutes);
+app.use("/api/admin", adminRoutes);   
 // ===============================
 // 404 HANDLER (must be after all routes)
 // ===============================
