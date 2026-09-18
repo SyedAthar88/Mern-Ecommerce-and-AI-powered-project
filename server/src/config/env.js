@@ -8,6 +8,7 @@ const requiredEnv = [
   "MONGO_URI",
   "ACCESS_TOKEN_SECRET",
   "REFRESH_TOKEN_SECRET",
+  "CLIENT_URL",    
 ];
 
 requiredEnv.forEach((key) => {

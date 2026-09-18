@@ -4,36 +4,76 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { env } from "./config/env.js";
-// NEW IMPORTS ⬇️
+
 import authRoutes from "./routes/auth.routes.js";
-import adminRoutes from "./routes/admin.routes.js"
-import userRoutes  from './routes/user.routes.js'
+import userRoutes from "./routes/user.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
-const app=express();
+import { apiLimiter } from "./middlewares/rateLimit.middleware.js";
 
-//security headders
-app.use(helmet());
-//cors
+const app = express();
+
+// ==========================================
+// Trust proxy (needed when behind Nginx/Heroku)
+// In dev, leave it off
+// ==========================================
+if (env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
+// ==========================================
+// SECURITY — Helmet
+// ==========================================
 app.use(
-    cors(
-        {
-            origin : env.CLIENT_URL,
-            credentials:true
-        }
-    )
-)
+  helmet({
+    // Allow frontend to read Set-Cookie if needed
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    // CSP: relaxed for our own API (no HTML served here)
+    contentSecurityPolicy:
+      env.NODE_ENV === "production" ? undefined : false,
+  })
+);
 
-//body-parser
+// ==========================================
+// CORS — allow our frontend only
+// ==========================================
+app.use(
+  cors({
+    origin: env.CLIENT_URL,
+    credentials: true,           // ⚠️ required for cookies
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["RateLimit-Limit", "RateLimit-Remaining", "RateLimit-Reset"],
+  })
+);
+
+// ==========================================
+// BODY PARSERS — with size limits
+// ==========================================
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
-// cookie-parser 
+// ==========================================
+// COOKIE PARSER
+// ==========================================
 app.use(cookieParser());
-// Logger
+
+// ==========================================
+// LOGGER
+// ==========================================
 if (env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-// for health check api 
+
+// ==========================================
+// RATE LIMITING — global, applied to all /api routes
+// Specific routes (login, forgot) have their own strict limiters
+// ==========================================
+app.use("/api", apiLimiter);
+
+// ==========================================
+// ROUTES
+// ==========================================
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -41,19 +81,24 @@ app.get("/api/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-// NEW ⬇️ — auth routes
+
 app.use("/api/auth", authRoutes);
-app.use("/api/users" ,userRoutes);
-app.use("/api/admin", adminRoutes);   
-// ===============================
-// 404 HANDLER (must be after all routes)
-// ===============================
+app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
+
+// ==========================================
+// 404 HANDLER
+// ==========================================
 app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: `Route not found: ${req.originalUrl}`,
   });
 });
-// NEW ⬇️ — error handler MUST be last
+
+// ==========================================
+// ERROR HANDLER (must be last)
+// ==========================================
 app.use(errorHandler);
+
 export default app;
