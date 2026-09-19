@@ -18,4 +18,4 @@ Currently converting to an AI-powered ecommerce platform.
 - Axios
 - Context API
 
-## Project Structure
+
