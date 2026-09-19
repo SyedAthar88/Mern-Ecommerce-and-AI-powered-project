@@ -1,0 +1,12 @@
+export default function ForgotPassword() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-neutral-900 mb-2">
+          Forgot Password
+        </h1>
+        <p className="text-neutral-600">Coming in Sub-step 5...</p>
+      </div>
+    </div>
+  );
+}
