@@ -8,6 +8,35 @@ import { authApi } from "../api/auth.api.js";
 export const AuthContext = createContext(null);
 
 // ==========================================
+// Module-level bootstrap promise
+// Guarantees bootstrap runs only ONCE even with React StrictMode
+// double-invoking effects in development.
+// ==========================================
+let bootstrapPromise = null;
+
+const runBootstrap = () => {
+  // Already started → return the same promise
+  if (bootstrapPromise) return bootstrapPromise;
+
+  // Start bootstrap and store the promise
+  bootstrapPromise = (async () => {
+    try {
+      // 1. Try refresh — if refresh cookie is valid, we're logged in
+      await authApi.refresh();
+
+      // 2. Fetch user with fresh access token
+      const res = await api.get("/users/me");
+      return res.data.data.user;
+    } catch {
+      // No valid refresh cookie → user is not logged in
+      return null;
+    }
+  })();
+
+  return bootstrapPromise;
+};
+
+// ==========================================
 // Provider component
 // ==========================================
 export const AuthProvider = ({ children }) => {
@@ -17,11 +46,30 @@ export const AuthProvider = ({ children }) => {
   // ==========================================
   // Bootstrap: check auth on app load
   // ==========================================
- useEffect(() => {
-  const handleLogout = () => setUser(null);
-  window.addEventListener("auth:logout", handleLogout);
-  return () => window.removeEventListener("auth:logout", handleLogout);
-}, []);
+  useEffect(() => {
+    let cancelled = false;
+
+    runBootstrap().then((bootstrapUser) => {
+      // Don't update state if component unmounted
+      if (cancelled) return;
+      setUser(bootstrapUser);
+      setLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // ==========================================
+  // Logout listener: clears user when interceptor
+  // dispatches "auth:logout" (refresh failed)
+  // ==========================================
+  useEffect(() => {
+    const handleLogout = () => setUser(null);
+    window.addEventListener("auth:logout", handleLogout);
+    return () => window.removeEventListener("auth:logout", handleLogout);
+  }, []);
 
   // ==========================================
   // login
@@ -38,7 +86,7 @@ export const AuthProvider = ({ children }) => {
   // ==========================================
   const signup = useCallback(async (data) => {
     const res = await authApi.signup(data);
-    return res.data.data.user;   // note: signup doesn't auto-login
+    return res.data.data.user; // note: signup doesn't auto-login
   }, []);
 
   // ==========================================
@@ -71,7 +119,7 @@ export const AuthProvider = ({ children }) => {
     signup,
     logout,
     refreshUser,
-    setUser,   // exposed for special cases (used by guards)
+    setUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
