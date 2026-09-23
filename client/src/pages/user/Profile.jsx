@@ -3,6 +3,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 import { Tabs } from "../../components/ui/Tabs.jsx";
 import { ProfileHeader } from "../../components/user/ProfileHeader.jsx";
 import { ProfileInfoForm } from "../../components/user/ProfileInfoForm.jsx";
+import { ChangePasswordForm } from "../../components/user/ChangePasswordForm.jsx";
 
 // ==========================================
 // Profile page — tabs for info + password
@@ -18,9 +19,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      {/* ==========================================
-          PAGE HEADER
-      ========================================== */}
+      {/* Page header */}
       <div className="mb-8 animate-fade-in">
         <h1 className="text-3xl font-bold text-neutral-900">Profile</h1>
         <p className="mt-1 text-neutral-600">
@@ -28,14 +27,10 @@ export default function Profile() {
         </p>
       </div>
 
-      {/* ==========================================
-          TABS
-      ========================================== */}
+      {/* Tabs */}
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
-      {/* ==========================================
-          TAB CONTENT
-      ========================================== */}
+      {/* Tab content */}
       <div className="mt-8 space-y-6">
         {activeTab === "info" && (
           <>
@@ -44,11 +39,7 @@ export default function Profile() {
           </>
         )}
 
-        {activeTab === "password" && (
-          <div className="bg-white rounded-2xl border border-neutral-100 shadow-soft p-8 text-center text-neutral-500">
-            <p className="text-sm">Change password form coming in Phase 14.5</p>
-          </div>
-        )}
+        {activeTab === "password" && <ChangePasswordForm />}
       </div>
     </div>
   );
