@@ -17,22 +17,11 @@ export const AuthProvider = ({ children }) => {
   // ==========================================
   // Bootstrap: check auth on app load
   // ==========================================
-  useEffect(() => {
-    const bootstrap = async () => {
-      try {
-        // Try to fetch current user. If access token expired,
-        // the interceptor (Phase 13) will refresh it automatically.
-        const res = await api.get("/users/me");
-        setUser(res.data.data.user);
-      } catch {
-        // Not logged in → user stays null
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    bootstrap();
-  }, []);
+ useEffect(() => {
+  const handleLogout = () => setUser(null);
+  window.addEventListener("auth:logout", handleLogout);
+  return () => window.removeEventListener("auth:logout", handleLogout);
+}, []);
 
   // ==========================================
   // login
