@@ -43,15 +43,35 @@ export const getAdminStats = asyncHandler(async (req, res) => {
 // getall users api 
 
 export const getAllUsers = asyncHandler(async (req, res) => {
-    const users = await User.find().sort({ createdAt: -1 });
+    // Parse query params
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+    const skip = (page - 1) * limit;
+
+    // Fetch paginated users (newest first)
+    const [users, total] = await Promise.all([
+        User.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+        User.countDocuments(),
+    ]);
+
     return res.status(200).json(
         new ApiResponse(
             200,
-            { users, count: users.length },
+            {
+                users,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit),
+                    hasNext: page * limit < total,
+                    hasPrev: page > 1,
+                },
+            },
             "Users fetched successfully"
         )
-    )
-})
+    );
+});
 
 // Get one user by id
 
@@ -105,31 +125,31 @@ export const updateUser = asyncHandler(async (req, res) => {
 
 
 export const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+    const { id } = req.params;
 
-  // 1. Find target user
-  const targetUser = await User.findById(id);
-  if (!targetUser) {
-    throw new ApiError(404, "User not found");
-  }
-
-  // 2. Guard: cannot delete yourself
-  if (req.user._id.equals(targetUser._id)) {
-    throw new ApiError(400, "You cannot delete your own account");
-  }
-
-  // 3. Guard: cannot delete the last admin
-  if (targetUser.role === "admin") {
-    const adminCount = await User.countDocuments({ role: "admin" });
-    if (adminCount <= 1) {
-      throw new ApiError(400, "Cannot delete the last admin account");
+    // 1. Find target user
+    const targetUser = await User.findById(id);
+    if (!targetUser) {
+        throw new ApiError(404, "User not found");
     }
-  }
 
-  // 4. Delete
-  await User.findByIdAndDelete(id);
+    // 2. Guard: cannot delete yourself
+    if (req.user._id.equals(targetUser._id)) {
+        throw new ApiError(400, "You cannot delete your own account");
+    }
 
-  return res.status(200).json(
-    new ApiResponse(200, {}, "User deleted successfully")
-  );
+    // 3. Guard: cannot delete the last admin
+    if (targetUser.role === "admin") {
+        const adminCount = await User.countDocuments({ role: "admin" });
+        if (adminCount <= 1) {
+            throw new ApiError(400, "Cannot delete the last admin account");
+        }
+    }
+
+    // 4. Delete
+    await User.findByIdAndDelete(id);
+
+    return res.status(200).json(
+        new ApiResponse(200, {}, "User deleted successfully")
+    );
 });
