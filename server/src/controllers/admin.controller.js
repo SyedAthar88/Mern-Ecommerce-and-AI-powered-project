@@ -42,35 +42,71 @@ export const getAdminStats = asyncHandler(async (req, res) => {
 
 // getall users api 
 
+// ==========================================
+// Escape special regex characters
+// Prevents regex injection via search input
+// ==========================================
+const escapeRegex = (str) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
+// ==========================================
+// GET /api/admin/users
+// List users with pagination + filters
+// Query params:
+//   ?page=1
+//   &limit=10
+//   &search=ali              (matches name or email, case-insensitive)
+//   &role=user               (user | admin)
+// ==========================================
 export const getAllUsers = asyncHandler(async (req, res) => {
-    // Parse query params
-    const page = Math.max(1, Number(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
-    const skip = (page - 1) * limit;
+  // ---- Parse pagination ----
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+  const skip = (page - 1) * limit;
 
-    // Fetch paginated users (newest first)
-    const [users, total] = await Promise.all([
-        User.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
-        User.countDocuments(),
-    ]);
+  // ---- Build filter object ----
+  const filter = {};
 
-    return res.status(200).json(
-        new ApiResponse(
-            200,
-            {
-                users,
-                pagination: {
-                    page,
-                    limit,
-                    total,
-                    totalPages: Math.ceil(total / limit),
-                    hasNext: page * limit < total,
-                    hasPrev: page > 1,
-                },
-            },
-            "Users fetched successfully"
-        )
-    );
+  // Search: match name OR email (case-insensitive)
+  const search = (req.query.search || "").trim();
+  if (search) {
+    const escaped = escapeRegex(search);
+    const regex = new RegExp(escaped, "i");
+    filter.$or = [{ name: regex }, { email: regex }];
+  }
+
+  // Role filter
+  const role = req.query.role;
+  if (role === "user" || role === "admin") {
+    filter.role = role;
+  }
+
+  // ---- Fetch filtered users + count in parallel ----
+  const [users, total] = await Promise.all([
+    User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    User.countDocuments(filter),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        users,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages,
+          hasNext: page < totalPages,
+          hasPrev: page > 1,
+        },
+      },
+      "Users fetched successfully"
+    )
+  );
 });
 
 // Get one user by id
