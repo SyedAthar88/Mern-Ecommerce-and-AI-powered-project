@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-
+import { ConfirmDialog } from "../../components/ui/ConfirmDialog.jsx";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useDebounce } from "../../hooks/useDebounce.js";
 import { adminApi } from "../../api/admin.api.js";
@@ -19,7 +19,6 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(true);
-
   // ---- Filters ----
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -27,7 +26,8 @@ export default function AdminUsers() {
 
   // ---- Modal state ----
   const [editingUser, setEditingUser] = useState(null);
-
+  const [deletingUser, setDeletingUser] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   // ---- Debounced search ----
   const debouncedSearch = useDebounce(search, 400);
 
@@ -71,9 +71,35 @@ export default function AdminUsers() {
   };
 
   const handleDelete = (targetUser) => {
-    toast(`Delete ${targetUser.name} — coming in Sub-step 15.6`, {
-      icon: "🚧",
-    });
+    setDeletingUser(targetUser);
+  };
+  // ==========================================
+  // Confirm delete handler
+  // ==========================================
+  const handleConfirmDelete = async () => {
+    if (!deletingUser) return;
+
+    setDeleting(true);
+    try {
+      await adminApi.deleteUser(deletingUser._id);
+
+      // Remove from local list (optimistic, no refetch)
+      setUsers((prev) => prev.filter((u) => u._id !== deletingUser._id));
+
+      // Update pagination count
+      setPagination((prev) =>
+        prev ? { ...prev, total: Math.max(0, prev.total - 1) } : prev
+      );
+
+      toast.success(`${deletingUser.name} deleted successfully`);
+      setDeletingUser(null);
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Failed to delete user. Please try again.";
+      toast.error(message);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // Called after successful edit
@@ -138,6 +164,17 @@ export default function AdminUsers() {
         user={editingUser}
         currentUserId={user?._id}
         onSuccess={handleEditSuccess}
+      />
+      <ConfirmDialog
+        open={!!deletingUser}
+        onClose={() => setDeletingUser(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete user?"
+        message={`Are you sure you want to delete ${deletingUser?.name}? This action cannot be undone.`}
+        confirmText="Delete user"
+        cancelText="Cancel"
+        variant="danger"
+        loading={deleting}
       />
     </div>
   );
