@@ -10,7 +10,8 @@ import userRoutes from "./routes/user.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { apiLimiter } from "./middlewares/rateLimit.middleware.js";
-
+import categoryRoutes from "./routes/category.routes.js";
+import adminCategoryRoutes from "./routes/admin.category.routes.js";
 const app = express();
 
 // ==========================================
@@ -85,7 +86,8 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/categories", categoryRoutes);
+app.use("/api/admin/categories", adminCategoryRoutes);
 // ==========================================
 // 404 HANDLER
 // ==========================================
