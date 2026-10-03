@@ -9,10 +9,13 @@ import { Pagination } from "../../components/ui/Pagination.jsx";
 import { UsersTable } from "../../components/admin/UsersTable.jsx";
 import { UsersFilters } from "../../components/admin/UsersFilters.jsx";
 import { EditUserModal } from "../../components/admin/EditUserModal.jsx";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 
 const PAGE_SIZE = 10;
 
 export default function AdminUsers() {
+  usePageTitle("Users");
+
   const { user } = useAuth();
 
   // ---- Data state ----

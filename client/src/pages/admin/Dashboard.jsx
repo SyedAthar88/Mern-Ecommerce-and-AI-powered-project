@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 
 import { useAuth } from "../../hooks/useAuth.js";
 import { adminApi } from "../../api/admin.api.js";

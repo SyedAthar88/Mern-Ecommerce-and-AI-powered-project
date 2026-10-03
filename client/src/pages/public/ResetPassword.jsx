@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 
 import { useAuth } from "../../hooks/useAuth.js";
 import { authApi } from "../../api/auth.api.js";
@@ -13,6 +14,8 @@ export default function ResetPassword() {
   // ==========================================
   // Hooks
   // ==========================================
+  usePageTitle("Reset password");
+
   const { user } = useAuth();
   const navigate = useNavigate();
   const { token } = useParams();
@@ -52,10 +55,10 @@ export default function ResetPassword() {
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 group">
               <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg transition-transform group-hover:scale-105">
-                M
+                C
               </div>
               <span className="font-bold text-2xl text-neutral-900">
-                MERN<span className="text-primary-600">Shop</span>
+                Clip<span className="text-primary-600">Kart</span>
               </span>
             </Link>
           </div>
@@ -148,10 +151,10 @@ export default function ResetPassword() {
             aria-label="Go to home"
           >
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg transition-transform group-hover:scale-105">
-              M
+              C
             </div>
             <span className="font-bold text-2xl text-neutral-900">
-              MERN<span className="text-primary-600">Shop</span>
+              Clip<span className="text-primary-600">Kart</span>
             </span>
           </Link>
         </div>
@@ -218,7 +221,7 @@ export default function ResetPassword() {
 
         {/* ============ FOOTER ============ */}
         <p className="text-center text-xs text-neutral-500 mt-8">
-          © {new Date().getFullYear()} MERNShop. All rights reserved.
+          © {new Date().getFullYear()} ClipKart. All rights reserved.
         </p>
       </div>
     </div>

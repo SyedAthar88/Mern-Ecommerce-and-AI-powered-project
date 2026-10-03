@@ -3,8 +3,11 @@ import { useAuth } from "../../hooks/useAuth.js";
 import { Section } from "../../components/ui/Section.jsx";
 import { Button } from "../../components/ui/Button.jsx";
 import { StatCard } from "../../components/user/StatCard.jsx";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 
 export default function Home() {
+  usePageTitle("Home");
+
   const { user } = useAuth();
 
   const firstName = user?.name?.split(" ")[0] || "there";

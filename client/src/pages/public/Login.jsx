@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import { Card } from "../../components/ui/Card.jsx";
 import { Input } from "../../components/ui/Input.jsx";
@@ -12,6 +12,7 @@ export default function Login() {
     // ==========================================
     // Hooks
     // ==========================================
+    usePageTitle("Sign in");
     const { user, login } = useAuth();
     const navigate = useNavigate();
     const emailRef = useRef(null);
@@ -57,29 +58,29 @@ export default function Login() {
     // Handle form submit
     // ==========================================
     const handleSubmit = async (e) => {
-  e.preventDefault();
+        e.preventDefault();
 
-  const errors = validateLogin(formData);
-  if (Object.keys(errors).length > 0) {
-    setFieldErrors(errors);
-    return;
-  }
+        const errors = validateLogin(formData);
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            return;
+        }
 
-  setLoading(true);
-  try {
-    await login(formData.email, formData.password);
-    toast.success("Welcome back!");
+        setLoading(true);
+        try {
+            await login(formData.email, formData.password);
+            toast.success("Welcome back!");
 
-    const redirectTo = location.state?.from?.pathname || "/home";
-    navigate(redirectTo, { replace: true });
-  } catch (err) {
-    const message =
-      err.response?.data?.message || "Login failed. Please try again.";
-    toast.error(message);
-  } finally {
-    setLoading(false);
-  }
-};
+            const redirectTo = location.state?.from?.pathname || "/home";
+            navigate(redirectTo, { replace: true });
+        } catch (err) {
+            const message =
+                err.response?.data?.message || "Login failed. Please try again.";
+            toast.error(message);
+        } finally {
+            setLoading(false);
+        }
+    };
     // ==========================================
     // Render
     // ==========================================
@@ -94,10 +95,10 @@ export default function Login() {
                         aria-label="Go to home"
                     >
                         <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg transition-transform group-hover:scale-105">
-                            M
+                            C
                         </div>
                         <span className="font-bold text-2xl text-neutral-900">
-                            MERN<span className="text-primary-600">Shop</span>
+                            Clip<span className="text-primary-600">Kart</span>
                         </span>
                     </Link>
                 </div>
@@ -165,8 +166,7 @@ export default function Login() {
 
                 {/* ============ FOOTER ============ */}
                 <p className="text-center text-xs text-neutral-500 mt-8">
-                    © {new Date().getFullYear()} MERNShop. All rights reserved.
-                </p>
+                    © {new Date().getFullYear()} ClipKart. All rights reserved.                </p>
             </div>
         </div>
     );

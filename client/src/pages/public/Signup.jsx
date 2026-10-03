@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import { Card } from "../../components/ui/Card.jsx";
 import { Input } from "../../components/ui/Input.jsx";
@@ -12,6 +12,7 @@ export default function Signup() {
   // ==========================================
   // Hooks
   // ==========================================
+  usePageTitle("Create account");
   const { user, signup, login } = useAuth();
   const navigate = useNavigate();
   const nameRef = useRef(null);
@@ -81,7 +82,7 @@ export default function Signup() {
       // Step 2: log them in immediately (sets cookies + context)
       await login(formData.email.trim(), formData.password);
 
-      toast.success("Account created! Welcome to MERNShop 🎉");
+      toast.success("Account created! Welcome to ClipKart 🎉");
       navigate("/");
     } catch (err) {
       const message =
@@ -106,10 +107,10 @@ export default function Signup() {
             aria-label="Go to home"
           >
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg transition-transform group-hover:scale-105">
-              M
+              C
             </div>
             <span className="font-bold text-2xl text-neutral-900">
-              MERN<span className="text-primary-600">Shop</span>
+              Clip<span className="text-primary-600">Kart</span>
             </span>
           </Link>
         </div>
@@ -179,7 +180,7 @@ export default function Signup() {
 
         {/* ============ FOOTER ============ */}
         <p className="text-center text-xs text-neutral-500 mt-8">
-          © {new Date().getFullYear()} MERNShop. All rights reserved.
+          © {new Date().getFullYear()} ClipKart. All rights reserved.
         </p>
       </div>
     </div>

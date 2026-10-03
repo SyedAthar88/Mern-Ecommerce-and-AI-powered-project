@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 
 import { useAuth } from "../../hooks/useAuth.js";
 import { authApi } from "../../api/auth.api.js";
@@ -12,6 +13,8 @@ export default function ForgotPassword() {
   // ==========================================
   // Hooks
   // ==========================================
+  usePageTitle("Forgot password");
+
   const { user } = useAuth();
   const emailRef = useRef(null);
 
@@ -97,10 +100,10 @@ export default function ForgotPassword() {
             aria-label="Go to home"
           >
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg transition-transform group-hover:scale-105">
-              M
+              C
             </div>
             <span className="font-bold text-2xl text-neutral-900">
-              MERN<span className="text-primary-600">Shop</span>
+              Clip<span className="text-primary-600">Kart</span>
             </span>
           </Link>
         </div>
@@ -221,7 +224,7 @@ export default function ForgotPassword() {
 
         {/* ============ FOOTER ============ */}
         <p className="text-center text-xs text-neutral-500 mt-8">
-          © {new Date().getFullYear()} MERNShop. All rights reserved.
+          © {new Date().getFullYear()} ClipKart. All rights reserved.
         </p>
       </div>
     </div>

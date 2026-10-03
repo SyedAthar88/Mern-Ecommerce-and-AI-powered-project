@@ -42,10 +42,10 @@ export default function Navbar() {
             aria-label="Go to home"
           >
             <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center text-white font-bold transition-transform group-hover:scale-105">
-              M
+              C
             </div>
             <span className="font-bold text-lg text-neutral-900 hidden sm:inline">
-              MERN<span className="text-primary-600">Shop</span>
+              Clip<span className="text-primary-600">Kart</span>
             </span>
           </Link>
 
@@ -77,7 +77,7 @@ export default function Navbar() {
                   0
                 </span>
               </button>
-            
+
               {/* User Dropdown */}
               <Dropdown
                 align="right"

@@ -4,6 +4,7 @@ import { Tabs } from "../../components/ui/Tabs.jsx";
 import { ProfileHeader } from "../../components/user/ProfileHeader.jsx";
 import { ProfileInfoForm } from "../../components/user/ProfileInfoForm.jsx";
 import { ChangePasswordForm } from "../../components/user/ChangePasswordForm.jsx";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 
 // ==========================================
 // Profile page — tabs for info + password
