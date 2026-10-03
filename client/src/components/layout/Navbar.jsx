@@ -2,7 +2,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth.js";
 import { Avatar } from "../ui/Avatar.jsx";
 import { Dropdown } from "../ui/Dropdown.jsx";
-
 // ==========================================
 // Navbar — top navigation
 // ==========================================
@@ -24,10 +23,9 @@ export default function Navbar() {
   // NavLink className helper
   // ==========================================
   const navLinkClass = ({ isActive }) =>
-    `text-sm font-medium transition-colors ${
-      isActive
-        ? "text-primary-600"
-        : "text-neutral-600 hover:text-neutral-900"
+    `text-sm font-medium transition-colors ${isActive
+      ? "text-primary-600"
+      : "text-neutral-600 hover:text-neutral-900"
     }`;
 
   return (
@@ -79,7 +77,7 @@ export default function Navbar() {
                   0
                 </span>
               </button>
-
+            
               {/* User Dropdown */}
               <Dropdown
                 align="right"
