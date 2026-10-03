@@ -4,7 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { env } from "./config/env.js";
-
+import adminProductRoutes from "./routes/admin.product.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
@@ -88,6 +88,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/admin/categories", adminCategoryRoutes);
+app.use("/api/admin/products", adminProductRoutes);
 // ==========================================
 // 404 HANDLER
 // ==========================================

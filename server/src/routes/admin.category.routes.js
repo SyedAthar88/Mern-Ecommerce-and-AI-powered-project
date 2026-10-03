@@ -5,6 +5,7 @@ import {
     createCategory,
     updateCategory,
     deleteCategory,
+    getCategoryDropdown,   // ← NEW
 } from "../controllers/category.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { authorize } from "../middlewares/role.middleware.js";
@@ -22,7 +23,7 @@ router.use(authorize("admin"));
 
 // List
 router.get("/", getAllCategories);
-
+router.get("/dropdown", getCategoryDropdown);  
 // Create
 router.post("/", validate(createCategorySchema), createCategory);
 

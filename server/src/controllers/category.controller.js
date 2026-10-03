@@ -203,3 +203,17 @@ export const deleteCategory = asyncHandler(async (req, res) => {
         new ApiResponse(200, {}, "Category deleted successfully")
     );
 });
+// ==========================================
+// GET /api/admin/categories/dropdown
+// Simplified list for select inputs
+// ==========================================
+export const getCategoryDropdown = asyncHandler(async (req, res) => {
+  const categories = await Category.find({ isActive: true })
+    .select("_id name")
+    .sort({ name: 1 })
+    .lean();
+
+  return res.status(200).json(
+    new ApiResponse(200, { categories }, "Categories fetched successfully")
+  );
+});
