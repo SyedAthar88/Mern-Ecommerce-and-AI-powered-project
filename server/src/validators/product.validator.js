@@ -5,7 +5,7 @@ import { z } from "zod";
 // ==========================================
 const imageSchema = z.object({
     url: z.string().url("Invalid image URL"),
-    publicId: z.string().min(1, "Public ID is required"),
+    publicId: z.string().optional().default(""),   // ← optional
 });
 
 // ==========================================
