@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-
+import AdminCategories from "../pages/admin/Categories.jsx";
 // Layout
 import Layout from "../components/layout/Layout.jsx";
 
@@ -82,7 +82,14 @@ export default function AppRoutes() {
           }
         />
       </Route>
-
+      <Route
+        path="/admin/categories"
+        element={
+          <AdminRoute>
+            <AdminCategories />
+          </AdminRoute>
+        }
+      />
       {/* ==========================================
           404 — must be last
       ========================================== */}

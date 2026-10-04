@@ -117,12 +117,27 @@ export default function Navbar() {
                 </Dropdown.Item>
 
                 {isAdmin && (
-                  <Dropdown.Item
-                    icon={<SettingsIcon />}
-                    onClick={() => navigate("/admin")}
-                  >
-                    Admin Panel
-                  </Dropdown.Item>
+                  <>
+                    <Dropdown.Divider />
+                    <Dropdown.Item
+                      icon={<DashboardIcon />}
+                      onClick={() => navigate("/admin")}
+                    >
+                      Dashboard
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      icon={<UsersIcon />}
+                      onClick={() => navigate("/admin/users")}
+                    >
+                      Users
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      icon={<TagIcon />}
+                      onClick={() => navigate("/admin/categories")}
+                    >
+                      Categories
+                    </Dropdown.Item>
+                  </>
                 )}
 
                 <Dropdown.Divider />
@@ -268,5 +283,29 @@ const LogoutIcon = () => (
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
     <polyline points="16 17 21 12 16 7" />
     <line x1="21" y1="12" x2="9" y2="12" />
+  </svg>
+);
+const DashboardIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-500">
+    <rect x="3" y="3" width="7" height="9" rx="1" />
+    <rect x="14" y="3" width="7" height="5" rx="1" />
+    <rect x="14" y="12" width="7" height="9" rx="1" />
+    <rect x="3" y="16" width="7" height="5" rx="1" />
+  </svg>
+);
+
+const UsersIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-500">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
+const TagIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-500">
+    <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+    <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
   </svg>
 );
