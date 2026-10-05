@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminCategories from "../pages/admin/Categories.jsx";
+import AdminProducts from "../pages/admin/Products.jsx";
 // Layout
 import Layout from "../components/layout/Layout.jsx";
 
@@ -87,6 +88,14 @@ export default function AppRoutes() {
         element={
           <AdminRoute>
             <AdminCategories />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/products"
+        element={
+          <AdminRoute>
+            <AdminProducts />
           </AdminRoute>
         }
       />
