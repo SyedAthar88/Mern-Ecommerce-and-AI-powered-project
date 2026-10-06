@@ -7,7 +7,7 @@ import Layout from "../components/layout/Layout.jsx";
 // Guards
 import ProtectedRoute from "../components/guards/ProtectedRoute.jsx";
 import AdminRoute from "../components/guards/AdminRoute.jsx";
-
+import Shop from "../pages/shop/Shop.jsx";
 // Public pages
 import Landing from "../pages/public/Landing.jsx";
 import Login from "../pages/public/Login.jsx";
@@ -98,6 +98,10 @@ export default function AppRoutes() {
             <AdminProducts />
           </AdminRoute>
         }
+      />
+      <Route
+        path="/shop"
+        element={<Shop />}
       />
       {/* ==========================================
           404 — must be last
