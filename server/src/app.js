@@ -12,6 +12,7 @@ import { errorHandler } from "./middlewares/error.middleware.js";
 import { apiLimiter } from "./middlewares/rateLimit.middleware.js";
 import categoryRoutes from "./routes/category.routes.js";
 import adminCategoryRoutes from "./routes/admin.category.routes.js";
+import productRoutes from "./routes/product.routes.js";
 const app = express();
 
 // ==========================================
@@ -89,6 +90,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/admin/categories", adminCategoryRoutes);
 app.use("/api/admin/products", adminProductRoutes);
+app.use("/api/products", productRoutes);              // ← NEW (public)
+
 // ==========================================
 // 404 HANDLER
 // ==========================================

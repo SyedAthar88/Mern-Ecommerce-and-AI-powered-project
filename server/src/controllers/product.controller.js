@@ -223,3 +223,137 @@ export const deleteProduct = asyncHandler(async (req, res) => {
         new ApiResponse(200, {}, "Product deleted successfully")
     );
 });
+// ==========================================
+// PUBLIC ENDPOINTS
+// ==========================================
+
+// ==========================================
+// GET /api/products
+// Browse products (public, active only)
+// ==========================================
+export const getPublicProducts = asyncHandler(async (req, res) => {
+    // ---- Pagination ----
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 12));
+    const skip = (page - 1) * limit;
+
+    // ---- Build filter (always active only) ----
+    const filter = { isActive: true };
+
+    // Search: name OR description OR tags
+    const search = (req.query.search || "").trim();
+    if (search) {
+        const escaped = escapeRegex(search);
+        const regex = new RegExp(escaped, "i");
+        filter.$or = [{ name: regex }, { description: regex }, { tags: regex }];
+    }
+
+    // Category: accept ObjectId or slug
+    const category = req.query.category;
+    if (category) {
+        if (/^[0-9a-fA-F]{24}$/.test(category)) {
+            filter.category = category;
+        } else {
+            const cat = await Category.findOne({
+                slug: category,
+                isActive: true,
+            }).select("_id");
+
+            if (cat) {
+                filter.category = cat._id;
+            } else {
+                // Invalid category → return empty
+                filter.category = "000000000000000000000000";
+            }
+        }
+    }
+
+    // Price range
+    const minPrice = Number(req.query.minPrice);
+    const maxPrice = Number(req.query.maxPrice);
+    const priceFilter = {};
+
+    if (!isNaN(minPrice) && minPrice >= 0) {
+        priceFilter.$gte = minPrice;
+    }
+    if (!isNaN(maxPrice) && maxPrice >= 0) {
+        priceFilter.$lte = maxPrice;
+    }
+
+    if (Object.keys(priceFilter).length > 0) {
+        filter.price = priceFilter;
+    }
+
+    // Featured only
+    if (req.query.featured === "true") {
+        filter.isFeatured = true;
+    }
+
+    // ---- Sort ----
+    const sortOptions = {
+        newest: { createdAt: -1 },
+        oldest: { createdAt: 1 },
+        price_asc: { price: 1 },
+        price_desc: { price: -1 },
+        name_asc: { name: 1 },
+        name_desc: { name: -1 },
+        popular: { "ratings.average": -1, "ratings.count": -1 },
+    };
+    const sort = sortOptions[req.query.sort] || sortOptions.newest;
+
+    // ---- Query ----
+    const [products, total] = await Promise.all([
+        Product.find(filter)
+            .select("-createdBy -isActive -__v -sku")
+            .populate("category", "name slug")
+            .sort(sort)
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        Product.countDocuments(filter),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                products,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages,
+                    hasNext: page < totalPages,
+                    hasPrev: page > 1,
+                },
+            },
+            "Products fetched successfully"
+        )
+    );
+});
+
+// ==========================================
+// GET /api/products/:slug
+// Single product by slug (public)
+// ==========================================
+export const getPublicProductBySlug = asyncHandler(async (req, res) => {
+    const { slug } = req.params;
+
+    const product = await Product.findOne({
+        slug,
+        isActive: true,
+    })
+        .select("-createdBy -isActive -__v -sku")
+        .populate("category", "name slug")
+        .lean();
+
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, { product }, "Product fetched successfully")
+    );
+});
