@@ -99,10 +99,8 @@ export default function AppRoutes() {
           </AdminRoute>
         }
       />
-      <Route
-        path="/shop"
-        element={<Shop />}
-      />
+      <Route path="/shop" element={<Shop />} />
+      <Route path="/shop/:categorySlug" element={<Shop />} />
       {/* ==========================================
           404 — must be last
       ========================================== */}
