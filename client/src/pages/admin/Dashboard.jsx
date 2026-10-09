@@ -14,6 +14,8 @@ import { Skeleton } from "../../components/ui/Skeleton.jsx";
 import { formatDate } from "../../utils/format.js";
 
 export default function AdminDashboard() {
+    usePageTitle("Admin");
+
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -122,8 +124,10 @@ export default function AdminDashboard() {
                     >
                         Manage Users
                     </Button>
-                    <Button variant="secondary" disabled leftIcon={<PackageIcon />}>
-                        Manage Products (soon)
+                    <Button variant="secondary"
+                        onClick={() => navigate("/admin/products")}
+                        leftIcon={<PackageIcon />}>
+                        Manage Products 
                     </Button>
                     <Button variant="secondary" disabled leftIcon={<ShoppingBagIcon />}>
                         Manage Orders (soon)
@@ -180,8 +184,8 @@ export default function AdminDashboard() {
                 )}
             </Section>
 
-          
-            
+
+
         </div>
     );
 }
