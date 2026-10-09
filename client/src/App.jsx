@@ -1,13 +1,18 @@
 import { Toaster } from "react-hot-toast";
 import AppRoutes from "./routes/AppRoutes.jsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.jsx";
-
+import { CartProvider } from "./context/CartContext.jsx";
 function App() {
   return (
     <>
+
       <ErrorBoundary>
-        <AppRoutes />
+        <CartProvider>
+          <AppRoutes />
+        </CartProvider>
       </ErrorBoundary>
+
+
 
       <Toaster
         position="top-right"
