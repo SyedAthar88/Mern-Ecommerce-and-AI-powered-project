@@ -2,6 +2,7 @@ import { Toaster } from "react-hot-toast";
 import AppRoutes from "./routes/AppRoutes.jsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
+import { CartDrawer } from "./components/cart/CartDrawer.jsx";
 function App() {
   return (
     <>
@@ -9,6 +10,7 @@ function App() {
       <ErrorBoundary>
         <CartProvider>
           <AppRoutes />
+          <CartDrawer />
         </CartProvider>
       </ErrorBoundary>
 
