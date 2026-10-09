@@ -3,7 +3,7 @@ import AdminCategories from "../pages/admin/Categories.jsx";
 import AdminProducts from "../pages/admin/Products.jsx";
 // Layout
 import Layout from "../components/layout/Layout.jsx";
-
+import ProductDetail from "../pages/shop/ProductDetail.jsx";
 // Guards
 import ProtectedRoute from "../components/guards/ProtectedRoute.jsx";
 import AdminRoute from "../components/guards/AdminRoute.jsx";
@@ -101,6 +101,7 @@ export default function AppRoutes() {
       />
       <Route path="/shop" element={<Shop />} />
       <Route path="/shop/:categorySlug" element={<Shop />} />
+      <Route path="/product/:slug" element={<ProductDetail />} />
       {/* ==========================================
           404 — must be last
       ========================================== */}
