@@ -18,7 +18,7 @@ import ResetPassword from "../pages/public/ResetPassword.jsx";
 // User pages (protected)
 import Home from "../pages/user/Home.jsx";
 import Profile from "../pages/user/Profile.jsx";
-
+import Cart from "../pages/Cart.jsx";
 // Admin pages (protected + role)
 import AdminDashboard from "../pages/admin/Dashboard.jsx";
 import AdminUsers from "../pages/admin/Users.jsx";
@@ -102,7 +102,14 @@ export default function AppRoutes() {
       <Route path="/shop" element={<Shop />} />
       <Route path="/shop/:categorySlug" element={<Shop />} />
       <Route path="/product/:slug" element={<ProductDetail />} />
-      {/* ==========================================
+      <Route
+        path="/cart"
+        element={
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        }
+      />      {/* ==========================================
           404 — must be last
       ========================================== */}
       <Route path="*" element={<NotFound />} />
