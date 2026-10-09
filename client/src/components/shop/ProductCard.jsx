@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-
+import { useCart } from "../../hooks/useCart.js";
 import { PriceDisplay } from "./PriceDisplay.jsx";
 import { RatingStars } from "./RatingStars.jsx";
 
@@ -9,7 +9,9 @@ import { RatingStars } from "./RatingStars.jsx";
 // ProductCard — product tile for grids
 // ==========================================
 export const ProductCard = ({ product, onAddToCart }) => {
+    const { addItem, openDrawer } = useCart();
     const [imageFailed, setImageFailed] = useState(false);
+    const [adding, setAdding] = useState(false);
 
     const hasImage = product.images?.[0]?.url && !imageFailed;
     const mainImage = product.images?.[0]?.url;
@@ -19,19 +21,27 @@ export const ProductCard = ({ product, onAddToCart }) => {
         product.compareAtPrice !== undefined &&
         product.compareAtPrice > product.price;
 
-    const handleAddToCart = (e) => {
+    const handleAddToCart = async (e) => {
         e.preventDefault();
         e.stopPropagation();
+        if (isOutOfStock || adding) return;
 
-        if (isOutOfStock) return;
-
+        // If parent provided a custom handler, use it
         if (onAddToCart) {
             onAddToCart(product);
-        } else {
-            toast("Cart coming in Phase 19", { icon: "🛒" });
+            return;
+        }
+
+        // Default: add to cart
+        setAdding(true);
+        const success = await addItem(product._id, 1);
+        setAdding(false);
+
+        if (success) {
+            toast.success("Added to cart");
+            openDrawer();
         }
     };
-
     return (
         <Link
             to={`/product/${product.slug}`}
@@ -105,10 +115,10 @@ export const ProductCard = ({ product, onAddToCart }) => {
                 <button
                     type="button"
                     onClick={handleAddToCart}
-                    disabled={isOutOfStock}
+                    disabled={isOutOfStock || adding}
                     className="mt-3 w-full h-9 text-sm font-medium rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:bg-neutral-200 disabled:text-neutral-400 disabled:cursor-not-allowed transition-colors"
                 >
-                    {isOutOfStock ? "Out of stock" : "Add to cart"}
+                    {isOutOfStock ? "Out of stock" : adding ? "Adding..." : "Add to cart"}
                 </button>
             </div>
         </Link>

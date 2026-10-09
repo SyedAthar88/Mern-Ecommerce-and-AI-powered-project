@@ -10,7 +10,7 @@ import { PriceDisplay } from "../../components/shop/PriceDisplay.jsx";
 import { RatingStars } from "../../components/shop/RatingStars.jsx";
 import { Button } from "../../components/ui/Button.jsx";
 import { Skeleton } from "../../components/ui/Skeleton.jsx";
-
+import { useCart } from "../../hooks/useCart.js";
 export default function ProductDetail() {
     const { slug } = useParams();
 
@@ -18,7 +18,8 @@ export default function ProductDetail() {
     const [loading, setLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
     const [quantity, setQuantity] = useState(1);
-
+    const { addItem, openDrawer } = useCart();
+    const [adding, setAdding] = useState(false);
     usePageTitle(product?.name || "Product");
 
     // ==========================================
@@ -111,10 +112,17 @@ export default function ProductDetail() {
     // ==========================================
     // Add to cart (placeholder for Phase 19)
     // ==========================================
-    const handleAddToCart = () => {
-        toast(`Added ${quantity} × ${product.name} — Cart coming in Phase 19`, {
-            icon: "🛒",
-        });
+    const handleAddToCart = async () => {
+        if (adding || isOutOfStock) return;
+
+        setAdding(true);
+        const success = await addItem(product._id, quantity);
+        setAdding(false);
+
+        if (success) {
+            toast.success(`Added ${quantity} × ${product.name} to cart`);
+            openDrawer();
+        }
     };
 
     // ==========================================
@@ -234,11 +242,12 @@ export default function ProductDetail() {
                             variant="primary"
                             size="lg"
                             fullWidth
-                            disabled={isOutOfStock}
+                            disabled={isOutOfStock || adding}
+                            loading={adding}
                             onClick={handleAddToCart}
-                            leftIcon={<CartIcon />}
+                            leftIcon={!adding ? <CartIcon /> : null}
                         >
-                            {isOutOfStock ? "Out of stock" : "Add to cart"}
+                            {isOutOfStock ? "Out of stock" : adding ? "Adding..." : "Add to cart"}
                         </Button>
                     </div>
 
