@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import { RelatedProducts } from "../../components/shop/RelatedProducts.jsx";
 import { usePageTitle } from "../../hooks/usePageTitle.js";
 import { productApi } from "../../api/product.api.js";
 import { ProductGallery } from "../../components/shop/ProductGallery.jsx";
@@ -275,6 +275,11 @@ export default function ProductDetail() {
                     {product.description}
                 </div>
             </div>
+            {/* Related products */}
+            <RelatedProducts
+                currentProductId={product._id}
+                categorySlug={product.category?.slug}
+            />
         </div>
     );
 }
@@ -339,6 +344,7 @@ const ProductDetailSkeleton = () => (
                 <Skeleton className="h-12 w-full mt-6" />
             </div>
         </div>
+
     </div>
 );
 
