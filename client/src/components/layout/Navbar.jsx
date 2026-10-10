@@ -2,13 +2,16 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth.js";
 import { Avatar } from "../ui/Avatar.jsx";
 import { Dropdown } from "../ui/Dropdown.jsx";
+import { useCart } from "../../hooks/useCart.js";
 // ==========================================
 // Navbar — top navigation
 // ==========================================
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { cart, toggleDrawer } = useCart();
   const navigate = useNavigate();
-
+  const itemCount = cart?.itemCount || 0;
+  const displayCount = itemCount > 99 ? "99+" : itemCount;
   const isAdmin = user?.role === "admin";
 
   // ==========================================
@@ -67,15 +70,19 @@ export default function Navbar() {
           {user ? (
             <>
               {/* Cart Icon */}
+              {/* Cart Icon */}
               <button
                 type="button"
+                onClick={toggleDrawer}
                 className="relative p-2 text-neutral-600 hover:text-neutral-900 transition-colors"
-                aria-label="Cart"
+                aria-label={`Open cart (${itemCount} ${itemCount === 1 ? "item" : "items"})`}
               >
                 <CartIcon />
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                  0
-                </span>
+                {itemCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-primary-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {displayCount}
+                  </span>
+                )}
               </button>
 
               {/* User Dropdown */}
