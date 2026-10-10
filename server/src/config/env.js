@@ -8,7 +8,9 @@ const requiredEnv = [
   "MONGO_URI",
   "ACCESS_TOKEN_SECRET",
   "REFRESH_TOKEN_SECRET",
-  "CLIENT_URL",    
+  "CLIENT_URL",
+  "STRIPE_SECRET_KEY",
+  "STRIPE_PUBLISHABLE_KEY",
 ];
 
 requiredEnv.forEach((key) => {
@@ -33,4 +35,8 @@ export const env = {
   SMTP_USER: process.env.SMTP_USER,
   SMTP_PASS: process.env.SMTP_PASS,
   EMAIL_FROM: process.env.EMAIL_FROM,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+  STRIPE_CURRENCY: process.env.STRIPE_CURRENCY || "USD"
 };

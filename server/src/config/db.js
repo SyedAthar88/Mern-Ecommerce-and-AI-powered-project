@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 import { env } from "./env.js";    // ← with .js ✅
 export const connDB=async()=>{
 try {
