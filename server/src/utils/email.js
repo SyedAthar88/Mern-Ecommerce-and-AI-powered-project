@@ -89,3 +89,16 @@ If you didn't request this, please ignore this email. Your password will remain 
 
   return sendEmail({ to, subject, text, html });
 };
+export const sendOrderConfirmationEmail = async (order) => {
+  // Placeholder — full template in Phase 20.9
+  const subject = `Order Confirmation #${order._id.toString().slice(-8)}`;
+  const text = `Thank you for your order! Order ID: ${order._id}`;
+  const html = `<h1>Thank you!</h1><p>Your order #${order._id.toString().slice(-8)} has been confirmed.</p>`;
+
+  return sendEmail({
+    to: order.shippingAddress.email,
+    subject,
+    text,
+    html,
+  });
+};

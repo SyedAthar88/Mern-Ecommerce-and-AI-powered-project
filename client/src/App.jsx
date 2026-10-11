@@ -3,14 +3,21 @@ import AppRoutes from "./routes/AppRoutes.jsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 import { CartDrawer } from "./components/cart/CartDrawer.jsx";
+import { Elements } from "@stripe/react-stripe-js";
+import { stripePromise } from "./config/stripe.js";
 function App() {
   return (
     <>
 
       <ErrorBoundary>
         <CartProvider>
-          <AppRoutes />
-          <CartDrawer />
+          {stripePromise ? (
+            <Elements stripe={stripePromise}>
+              <AppRoutes />
+            </Elements>
+          ) : (
+            <AppRoutes />
+          )}
         </CartProvider>
       </ErrorBoundary>
 

@@ -15,6 +15,7 @@ import adminCategoryRoutes from "./routes/admin.category.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import checkoutRoutes from "./routes/checkout.routes.js";
+import webhookRoutes from "./routes/webhook.routes.js";
 const app = express();
 
 // ==========================================
@@ -37,7 +38,6 @@ app.use(
       env.NODE_ENV === "production" ? undefined : false,
   })
 );
-
 // ==========================================
 // CORS — allow our frontend only
 // ==========================================
@@ -50,7 +50,10 @@ app.use(
     exposedHeaders: ["RateLimit-Limit", "RateLimit-Remaining", "RateLimit-Reset"],
   })
 );
-
+// ==========================================
+// WEBHOOKS — MUST come before express.json()
+// ==========================================
+app.use("/api/webhooks", webhookRoutes);
 // ==========================================
 // BODY PARSERS — with size limits
 // ==========================================
