@@ -14,6 +14,7 @@ import categoryRoutes from "./routes/category.routes.js";
 import adminCategoryRoutes from "./routes/admin.category.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
+import checkoutRoutes from "./routes/checkout.routes.js";
 const app = express();
 
 // ==========================================
@@ -93,6 +94,7 @@ app.use("/api/admin/categories", adminCategoryRoutes);
 app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/products", productRoutes);        
 app.use("/api/cart", cartRoutes);     
+app.use("/api/checkout", checkoutRoutes);
 // ==========================================
 // 404 HANDLER
 // ==========================================
