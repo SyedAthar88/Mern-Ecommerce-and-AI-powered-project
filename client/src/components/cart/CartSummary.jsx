@@ -20,12 +20,8 @@ export const CartSummary = ({ cart }) => {
     const handleCheckout = () => {
         if (itemCount === 0) return;
 
-        setCheckingOut(true);
-        // Simulate brief delay for UX feedback
-        setTimeout(() => {
-            setCheckingOut(false);
-            toast("Checkout coming in Phase 20", { icon: "💳" });
-        }, 400);
+        // Navigate to checkout
+        navigate("/checkout");
     };
 
     return (
@@ -89,10 +85,9 @@ export const CartSummary = ({ cart }) => {
                 variant="primary"
                 size="lg"
                 fullWidth
-                loading={checkingOut}
                 disabled={itemCount === 0}
                 onClick={handleCheckout}
-                rightIcon={!checkingOut ? <ArrowRightIcon /> : null}
+                rightIcon={<ArrowRightIcon />}
             >
                 Proceed to Checkout
             </Button>

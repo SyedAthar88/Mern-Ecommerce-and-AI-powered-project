@@ -8,13 +8,14 @@ import ProductDetail from "../pages/shop/ProductDetail.jsx";
 import ProtectedRoute from "../components/guards/ProtectedRoute.jsx";
 import AdminRoute from "../components/guards/AdminRoute.jsx";
 import Shop from "../pages/shop/Shop.jsx";
+import OrderSuccess from "../pages/OrderSuccess.jsx";
 // Public pages
 import Landing from "../pages/public/Landing.jsx";
 import Login from "../pages/public/Login.jsx";
 import Signup from "../pages/public/Signup.jsx";
 import ForgotPassword from "../pages/public/ForgotPassword.jsx";
 import ResetPassword from "../pages/public/ResetPassword.jsx";
-
+import Checkout from "../pages/Checkout.jsx";
 // User pages (protected)
 import Home from "../pages/user/Home.jsx";
 import Profile from "../pages/user/Profile.jsx";
@@ -108,8 +109,26 @@ export default function AppRoutes() {
           <ProtectedRoute>
             <Cart />
           </ProtectedRoute>
+
         }
-      />      {/* ==========================================
+      />
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order-success/:orderId"
+        element={
+          <ProtectedRoute>
+            <OrderSuccess />
+          </ProtectedRoute>
+        }
+      />
+      {/* ==========================================
           404 — must be last
       ========================================== */}
       <Route path="*" element={<NotFound />} />
