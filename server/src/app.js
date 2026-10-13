@@ -16,6 +16,7 @@ import productRoutes from "./routes/product.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import checkoutRoutes from "./routes/checkout.routes.js";
 import webhookRoutes from "./routes/webhook.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 const app = express();
 
 // ==========================================
@@ -98,6 +99,7 @@ app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/products", productRoutes);        
 app.use("/api/cart", cartRoutes);     
 app.use("/api/checkout", checkoutRoutes);
+app.use("/api/orders", orderRoutes);
 // ==========================================
 // 404 HANDLER
 // ==========================================
